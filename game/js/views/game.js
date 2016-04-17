@@ -29,6 +29,8 @@ module.exports = {
     var avatars = {};
     function addAvatar (id, player, stage) {
       avatars[id] = createAvatar();
+      avatars[id].position.x = player.hammerwatch.avatar.position.x;
+      avatars[id].position.y = player.hammerwatch.avatar.position.y;
 
       stage.addChild(avatars[id]);
     }

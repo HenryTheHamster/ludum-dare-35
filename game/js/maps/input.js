@@ -20,12 +20,10 @@ function right (state, input, data) {
 }
 
 function stopSide (state, input, data) {
-  console.log('stopSide');
   return [p(data.playerId, 'hammerwatch.avatar.velocity.x'), 0];
 }
 
 function stopUp (state, input, data) {
-  console.log('stopUp');
   return [p(data.playerId, 'hammerwatch.avatar.velocity.y'), 0];
 }
 
@@ -45,19 +43,12 @@ module.exports = {
   type: 'ActionMap',
   func: function Hammerwatch () {
     return {
-      up: [
-        {call: up, noEventKey: 'stop-up'}
-      ],
-      down: [
-        {call: down, noEventKey: 'stop-up'}
-      ],
-      left: [
-        {call: left, noEventKey: 'stop-side'}
-      ],
-      right: [
-        {call: right, noEventKey: 'stop-side'}
-      ],
+      up: [ {call: up, noEventKey: 'stop-up'} ],
+      down: [ {call: down, noEventKey: 'stop-up'} ],
+      left: [ {call: left, noEventKey: 'stop-side'} ],
+      right: [ {call: right, noEventKey: 'stop-side'} ],
       nothing: [
+        {call: stopUp, noEventKey: 'stop-up'},
         {call: stopSide, noEventKey: 'stop-side'}
       ]
     };

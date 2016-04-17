@@ -18,10 +18,7 @@ module.exports = {
         var velocity = player.hammerwatch.avatar.velocity;
         var speed = config().hammerwatch.avatar.speed;
 
-        console.log('position', position);
-        console.log('velocity', velocity);
         var newPosition = add(position, scale(velocity, speed * delta));
-        console.log(newPosition);
 
         return [
           p(player.id, 'hammerwatch.avatar.position'), newPosition
