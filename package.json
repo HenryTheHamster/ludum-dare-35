@@ -7,9 +7,14 @@
     "npm": "latest"
   },
   "dependencies": {
-    "ensemblejs": "^6.0.0-develop-14",
+    "ensemblejs": "^6.0.0-develop-22",
     "gamepad-api-mappings": "^4.0.0",
-    "jade": "^1.11.0"
+    "jade": "^1.11.0",
+    "just.randomcolor": "^0.1.1",
+    "mathjs": "^3.1.4",
+    "pixi.js": "^3.0.11",
+    "randomcolor": "^0.4.4",
+    "voronoi-diagram": "^1.0.1"
   },
   "devDependencies": {
     "gulp": "^3.9.0"

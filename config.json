@@ -1,11 +1,14 @@
 {
-  "peerjs": {
-    "debugLevel": 3
+  "hammerwatch": {
+    "avatar": {
+      "speed": 100
+    },
+    "world": {
+      "height": 500,
+      "width": 500
+    }
   },
-  "ensemble": {
-    "autoSaveThrottle": 20
-  },
-  "logging": {
-    "logLevel": "info"
+  "debug": {
+    "develop": true
   }
 }
