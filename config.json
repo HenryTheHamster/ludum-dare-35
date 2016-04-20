@@ -10,5 +10,8 @@
   },
   "debug": {
     "develop": true
+  },
+  "ensemble": {
+    "autoSaveThrottle": 30
   }
 }
