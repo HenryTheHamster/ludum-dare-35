@@ -1,45 +1,91 @@
 'use strict';
 
 var PIXI = require('pixi.js');
+require('../utils/animatedSprite');
 
 module.exports = {
   type: 'OnClientReady',
   deps: ['Config', 'StateTracker', 'DefinePlugin', '$'],
   func: function View (config, tracker, define, $) {
 
-    // function drawBackground () {
-    //   var shape = new PIXI.Graphics();
-    //   //MOVE colours into a supported feature:
-    //   //var colours = require('ensemblejs/colours')
-    //   //var colors = require('ensemblejs/colors')
-    //   //shape.beginFill(colours.board);
-    //   //The colours are picked up from a colours.json file (probably automatically filtered by modes)
-    //   shape.beginFill(0xFF0000);
-    //   shape.drawRect(0, 0, 520, 520);
-    //   shape.zIndex = 10000;
+    function velocityToDirection (velocity) {
+      var a, b;
+      if(velocity.y < 0) {
+        a = 'north';
+      } else if(velocity.y > 0) {
+        a = 'south';
+      } else {
+        a = '';
+      }
+      if(velocity.x < 0) {
+        b = 'west';
+      } else if(velocity.x > 0) {
+        b = 'east';
+      } else {
+        b = '';
+      }
+      return a + b;
+    }
 
-    //   return shape;
-    // }
-
-    function createAvatar () {
-      var sprite = new PIXI.Sprite.fromImage('/game/assets/saruman.gif');
-      return sprite;
+    function getTextures(start, finish) {
+      var textures = [];
+      for(var i = start; i <= finish; i++) {
+        var val = i < 10 ? '0' + i : i;
+        textures.push(PIXI.Texture.fromFrame(val + '.png'));
+      }
+      return textures;
     }
 
     var avatars = {};
     function addAvatar (id, player, stage) {
-      avatars[id] = createAvatar();
-      avatars[id].position.x = player.hammerwatch.avatar.position.x;
-      avatars[id].position.y = player.hammerwatch.avatar.position.y;
+      avatars[id] = {
+        animations: {},
+        avatar: new PIXI.Container()
+      };
 
-      stage.addChild(avatars[id]);
+      var sequences = {
+        south: getTextures(1, 4),
+        north: getTextures(5, 8),
+        southeast: getTextures(9, 12),
+        southwest: getTextures(13, 16),
+        west: getTextures(17, 20),
+        east: getTextures(21, 24),
+        northwest: getTextures(25, 28),
+        northeast: getTextures(29, 32)
+      };
+
+      Object.keys(sequences).forEach(function(key) {
+        avatars[id].animations[key] = new PIXI.extras.MovieClip(sequences[key]); 
+        avatars[id].animations[key].animationSpeed = 0.15;
+        avatars[id].avatar.addChild(avatars[id].animations[key]);
+        avatars[id].animations[key].play();
+        avatars[id].animations[key].visible = false;
+      });
+      avatars[id].animations.south.visible = true;
+      // avatars[id].animations.south.loop = false;
+      avatars[id].avatar.position.x = player.hammerwatch.avatar.position.x;
+      avatars[id].avatar.position.y = player.hammerwatch.avatar.position.y;
+      avatars[id].avatar.scale.x = 3.0;
+      avatars[id].avatar.scale.y = 3.0;
+
+      stage.addChild(avatars[id].avatar);
     }
 
-    function moveAvatar (id, player) {
-      console.log('move avatar!!!');
-      // avatars[id].position.set(player.hammerwatch.avatar.position.x, player.hammerwatch.avatar.position.y);
-      avatars[id].position.x = player.hammerwatch.avatar.position.x;
-      avatars[id].position.y = player.hammerwatch.avatar.position.y;
+    function changeDirection (id, player) {
+      var direction = velocityToDirection(player.hammerwatch.avatar.velocity);
+      if(direction !== '') {
+        console.log(direction);
+        Object.keys(avatars[id].animations).forEach(function(key) {
+          avatars[id].animations[key].loop = true;
+          avatars[id].animations[key].play();
+          avatars[id].animations[key].visible = false;
+        });
+        avatars[id].animations[direction].visible = true;
+      } else {
+        Object.keys(avatars[id].animations).forEach(function(key) {
+          avatars[id].animations[key].loop = false;
+        });
+      }
     }
 
     //Screen Stuff, pull out
@@ -85,7 +131,7 @@ module.exports = {
     var stage;
     var offset;
     var scale;
-    return function setup (dims) {
+    return function setup (dims, playerId) {
       // $()('#overlay').append(overlay());
 
       stage = new PIXI.Container();
@@ -96,14 +142,17 @@ module.exports = {
       stage.position.x = offset.x;
       stage.position.y = offset.y;
       scale = scaleWorld(dims);
-      console.log(scale);
       stage.scale.x = scale.x;
       stage.scale.y = scale.y;
-
+      PIXI.loader
+        .add('/game/assets/pirate_queen.json')
+        .load(function() {
+          tracker().onElementAdded('players', addAvatar, [stage]);
+          tracker().onElementChanged('players', changeDirection);
+          // tracker().onChangeOf(`players:${playerId}.hammerwatch.avatar.velocity`, changeDirection, [playerId]);
+        });
       // stage.addChild(addAvatar());
 
-      tracker().onElementAdded('players', addAvatar, [stage]);
-      tracker().onElementChanged('players', moveAvatar);
 
       define()('OnRenderFrame', function OnRenderFrame () {
         return function renderScene () {
