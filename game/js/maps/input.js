@@ -48,8 +48,8 @@ module.exports = {
       left: [ {call: left, noEventKey: 'stop-side'} ],
       right: [ {call: right, noEventKey: 'stop-side'} ],
       nothing: [
-        {call: stopUp, noEventKey: 'stop-up'},
-        {call: stopSide, noEventKey: 'stop-side'}
+        {call: stopSide, noEventKey: 'stop-side'},
+        {call: stopUp, noEventKey: 'stop-up'}
       ]
     };
   }
