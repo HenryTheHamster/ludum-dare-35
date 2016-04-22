@@ -43,10 +43,14 @@ module.exports = {
   type: 'ActionMap',
   func: function Hammerwatch () {
     return {
-      up: [ {call: up} ],
-      down: [ {call: down} ],
-      left: [ {call: left} ],
-      right: [ {call: right} ]
+      up: [ {call: up, noEventKey: 'stop-up'} ],
+      down: [ {call: down, noEventKey: 'stop-up'} ],
+      left: [ {call: left, noEventKey: 'stop-side'} ],
+      right: [ {call: right, noEventKey: 'stop-side'} ],
+      nothing: [
+        {call: stopSide, noEventKey: 'stop-side'},
+        {call: stopUp, noEventKey: 'stop-up'}
+      ]
     };
   }
 };
