@@ -1,5 +1,5 @@
 {
-  "name": "ludum-dare",
+  "name": "pirates",
   "version": "1.0.0",
   "description": "Your game description goes here",
   "engines": {
@@ -7,7 +7,8 @@
     "npm": "latest"
   },
   "dependencies": {
-    "ensemblejs": "^6.0.0-develop-28",
+    "distributedlife-sequence": "^1.0.1",
+    "ensemblejs": "^6.0.0-develop-35",
     "gamepad-api-mappings": "^4.0.0",
     "jade": "^1.11.0",
     "just.randomcolor": "^0.1.1",
